@@ -1,63 +1,46 @@
 
-var timeDisplayEl = $('#timeDisplay');
-var saveBtn = $(".saveBtn")
 
-
-// date and time
-
-function displayTime() {
-    var rightNow = dayjs().format('MMM DD, YYYY [at] hh:mm:ss a');
-    timeDisplayEl.text(rightNow);
-  }
-
-  displayTime();
-  setInterval(displayTime, 1000);
-
-// save/set into local storage
-
-  saveBtn.on("click", function() {
-    var time = $(this).siblings(".hour").text;
-    var description = $(this).siblings(".description").val;
-
-    localStorage.setItem(time, description);
-  });
-
-
-
-// function to see which block currently in and if it is past present or in the future compared to the current time
-
-function timeBlock() {
-  var currentTime = moment().hour();
-
-  $(".time-block").each(function () {
-    var blockTime = parseInt($(this).attr("id"));
-
-    if (blockTime < currentTime) {      
-      $(this).addClass("past");
-    }
-    else if (blockTime === currentTime) {      
-      $(this).addClass("present");      
-    }
-    else {      
-      $(this).addClass("future"); 
-    }
-
+$(document).ready(function(){
+  $(".saveBtn").on("click", function(){
+    var time = $(this).parent().attr("id")
+    var value = $(this).siblings(".input").val()
+    localStorage.setItem(time, value)    
   })
 
-};
-// get item from local storage
+  function checkTime() {
+    var currentHour = dayjs().hour()
+    $(".time-block").each(function() {
+      var blockHour = parseInt($(this).attr("id"))
+      if (blockHour < currentHour) {
+        $(this).addClass("past")
+      }      
+      else if (blockHour === currentHour) {
+        $(this).removeClass("past")
+        $(this).addClass("present")
+      }
+      else {
+        $(this).removeClass("past")
+        $(this).removeClass("present")
+        $(this).addClass("future")        
+      }
 
-function saveEvent() {
-  
-  $(".hour").each(function() {
-    var currentHour = $(this).text();
-    var currentEvent = localStorage.getItem(currentHour);
+    })
+  }
+  checkTime();
+  setInterval(checkTime, 60000)
 
-    if (currentEvent !== null)
-      $(this).siblings(".description").val(currentEvent);
-  });
-}
+  $("#9 .input").val(localStorage.getItem("9"))
+  $("#10 .input").val(localStorage.getItem("10"))
+  $("#11 .input").val(localStorage.getItem("11"))
+  $("#12 .input").val(localStorage.getItem("12"))
+  $("#13 .input").val(localStorage.getItem("13"))
+  $("#14 .input").val(localStorage.getItem("14"))
+  $("#15 .input").val(localStorage.getItem("15"))
+  $("#16 .input").val(localStorage.getItem("16"))
+  $("#17 .input").val(localStorage.getItem("17"))
 
-timeBlock();
-saveEvent();
+  $("#currentDay").text(dayjs().format("dddd, MMMM D, YYYY"))
+})
+
+
 
